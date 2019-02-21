@@ -1,7 +1,6 @@
 {
   "name": "demo",
   "version": "1.7.1",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
@@ -12,5 +11,15 @@
   "dependencies": {
     "morgan": "^1.9.1",
     "nodemon": "^1.18.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fadion1996/food-delivery-server-goit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Fadion1996/food-delivery-server-goit/issues"
+  },
+  "homepage": "https://github.com/Fadion1996/food-delivery-server-goit#readme",
+  "description": ""
 }
