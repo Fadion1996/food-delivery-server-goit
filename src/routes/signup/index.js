@@ -2,11 +2,17 @@ const qs = require('querystring');
 const fs = require("fs");
 let path = '';
 
+
+
 const saveUser = user => {
+  let dir = './src/db/users/';
+  !fs.existsSync(dir) && fs.mkdirSync(dir);
+
   path = `./src/db/users/${user.user.username}.txt`;
-  fs.writeFile(`./src/db/users/${user.user.username}.txt`, JSON.stringify(user), ()=> {
+  fs.writeFile(path, JSON.stringify(user), ()=> {
       console.log(`Write file: ${user.user.username}.txt`);
   });
+  
   // получить файл с юзером
   // найти путь папки users
   // сохранить туда файл
