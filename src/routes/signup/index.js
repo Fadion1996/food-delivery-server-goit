@@ -36,8 +36,8 @@ const signupRoute = (request, response) => {
           email: parseBody.email,
         }
       };
-      responseUser(result);
       saveUser(result);
+      responseUser(result);
     });
 
     request.on('end', () => {
@@ -48,6 +48,7 @@ const signupRoute = (request, response) => {
   responseUser = (userData) => {
     const userName = userData.user.username;
     fs.writeFile(`./src/db/users/${userName}.json`, JSON.stringify(userData), (err, data) => {
+      console.log(`Write file: ${userName}.json`);
       response.writeHead(200, {"Content-Type": "application/json"});
       response.end(JSON.stringify(userData));
     })
