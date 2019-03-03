@@ -2,8 +2,6 @@ const qs = require('querystring');
 const fs = require("fs");
 let path = '';
 
-
-
 const saveUser = user => {
   let dir = './src/db/users/';
   !fs.existsSync(dir) && fs.mkdirSync(dir);
@@ -13,13 +11,9 @@ const saveUser = user => {
       console.log(`Write file: ${user.user.username}.txt`);
   });
   
-  // получить файл с юзером
-  // найти путь папки users
-  // сохранить туда файл
 };
 
 const signupRoute = (request, response) => {
-  // Взять данные что пришли
 
   if (request.method === 'POST') {
     let body = '';
@@ -43,6 +37,8 @@ const signupRoute = (request, response) => {
     request.on('end', () => {
       const post = qs.parse(body);
     });
+
+    
   }
 
   responseUser = (userData) => {
@@ -53,15 +49,6 @@ const signupRoute = (request, response) => {
       response.end(JSON.stringify(userData));
     })
   }
-  
-  // Взять username с данных, сохранить в переменную
-
-  // Сохраняем данные в <username>.json
-
-  // Сохранить <username>.json в папку users
-
-  // Отправляем файл в ответе с данными юзера
-  // использовать response
     
 };
 
