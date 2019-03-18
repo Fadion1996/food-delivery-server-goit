@@ -19,6 +19,7 @@ const productsRoute = (req, res) => {
       let resData, status;
 
       const pathID = req.url.split('/')[2];
+      const pathCategory = req.url.split('/')[1];
       // get id from url
       const id = pathID.includes('?') ? null : pathID;
 
@@ -42,8 +43,13 @@ const productsRoute = (req, res) => {
           queryArr = category.split(','); // get categories array from url
           resData = getProductsByCategory(queryArr, parsedData);
         }
-      } 
-      !resData.length && (status='no products')
+      }
+      console.log(id);
+      if (pathCategory === 'products' && !pathID) {
+        resData = parsedData;
+      }
+
+      console.log(pathCategory === 'products')
 
       const response = { status: status, products: resData };
       res.end(JSON.stringify(response));

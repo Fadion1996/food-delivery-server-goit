@@ -1,28 +1,26 @@
-const hasNumber = myString => /\d/.test(myString);
+const getValues = arr =>
+  arr.map(({ id, sku, name, description }) => {
+    return { id, sku, name, description };
+  });
 
-const getIdFreeUrl = url => {
-  // url example : `/user/12345`
-  const lastIndex = url.lastIndexOf('/');
-  const idString = url.slice(lastIndex +1).trim();
-
-  // url example : `/users`
-  if (!hasNumber(idString)) {
-    return url;
-  }
-
-  const idNumber = +idString;
-
-  if (idNumber && lastIndex !== -1) {
-    return url.slice(0, lastIndex);
-  }
-
-  return url;
+const getProductsByCategory = (queryArr, parsedData) => {
+  const productsArr = [];
+  queryArr.map(category =>
+    parsedData.map(p =>
+      p.categories.forEach(e => {
+        e === category && !productsArr.includes(p) && productsArr.push(p);
+      })
+    )
+  );
+  return getValues(productsArr);
 };
 
-const getRouteHandler = (routerConfig, url) => {
-  const clearUrl = getIdFreeUrl(url);
-
-  return routerConfig[clearUrl];
+const getProductsById = (queryArr, parsedData) => {
+  const productsArr = [];
+  parsedData.map(p =>
+    queryArr.forEach(id => p.id.toString() === id && productsArr.push(p))
+  );
+  return getValues(productsArr);
 };
 
-module.exports = getRouteHandler;
+module.exports = { getProductsByCategory, getProductsById };
