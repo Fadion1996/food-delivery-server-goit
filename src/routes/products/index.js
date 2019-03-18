@@ -44,9 +44,12 @@ const productsRoute = (req, res) => {
           resData = getProductsByCategory(queryArr, parsedData);
         }
       }
-      console.log(id);
       if (pathCategory === 'products' && !pathID) {
         resData = parsedData;
+      } 
+
+      if (!resData.length) {
+        status = 'no products';
       }
 
       console.log(pathCategory === 'products')
