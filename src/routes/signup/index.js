@@ -1,55 +1,48 @@
-const qs = require('querystring');
-const fs = require("fs");
-let path = '';
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
-const saveUser = user => {
-  let dir = './src/db/users/';
-  !fs.existsSync(dir) && fs.mkdirSync(dir);
+const usersFolder = path.resolve(__dirname, '../../../', 'db/users');
 
-  path = `./src/db/users/${user.user.username}.txt`;
-  fs.writeFile(path, JSON.stringify(user), ()=> {
-      console.log(`Write file: ${user.user.username}.txt`);
-  });
-  
+// PROMISIFY function example
+//
+// const writeFile = (src, content) => {
+//   return new Promise((resolve, reject) => {
+//     fs.writeFile(src, content, resolve);
+//   });
+// };
+
+const writeFile = util.promisify(fs.writeFile);
+
+const saveNewUser = (data) => {
+    const src = path.resolve('./src/db/users', 'all-users.json');
+    const dataStr = JSON.stringify(data);
+
+    return writeFile(src, dataStr);
 };
 
-const signupRoute = (request, response) => {
+const createUser = (request, response) => {
+    const user = request.body;
+    const userData =  { ...user, id: Math.random() };
 
-  if (request.method === 'POST') {
-    let body = '';
-    request.on('data', data => {
-      body = body + data;
-      const parseBody = JSON.parse(body);
-      
-      const result = {
-        status: 'success',
-        user: {
-          username: parseBody.username,
-          telephone: parseBody.telephone,
-          password:  parseBody.password,
-          email: parseBody.email,
-        }
-      };
-      saveUser(result);
-      responseUser(result);
-    });
+    const sendResponse = () => {
+        response.json({
+            status: 'success',
+            user: userData
+        });
+    };
 
-    request.on('end', () => {
-      const post = qs.parse(body);
-    });
+    const sendError = () => {
+        response.status(400);
+        response.json({
+            error: 'user was not saved'
+        });
+    };
 
-    
-  }
+    saveNewUser(userData)
+        .then(sendResponse)
+        .catch(sendError);
 
-  responseUser = (userData) => {
-    const userName = userData.user.username;
-    fs.writeFile(`./src/db/users/${userName}.json`, JSON.stringify(userData), (err, data) => {
-      console.log(`Write file: ${userName}.json`);
-      response.writeHead(200, {"Content-Type": "application/json"});
-      response.end(JSON.stringify(userData));
-    })
-  }
-    
 };
 
-module.exports = signupRoute;
+module.exports = createUser;

@@ -9,10 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/express": "^4.16.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Fadion1996/food-delivery-server-goit.git"
@@ -23,4 +27,3 @@
   "homepage": "https://github.com/Fadion1996/food-delivery-server-goit#readme",
   "description": ""
 }
- 

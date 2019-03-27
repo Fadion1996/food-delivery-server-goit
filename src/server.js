@@ -1,24 +1,24 @@
-const https = require('https');
-const http = require('http');
-const url = require('url');
-
+const app = require('./modules/app');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const router = require('./routes/router');
 
-const logger = morgan('combined');
-const ssl = require("../ssl");
+const errorHandler = (req, res, next)  => {
+    res.status(500).send('No such page');
+    next();
+};
 
 const startServer = port => {
+    app
+        .use(bodyParser.urlencoded({ extended: false }))
+        .use(bodyParser.json())
+        .use(morgan('dev'))
+        .use('/', router)
+        .use(errorHandler);
 
-  const server = http.createServer(ssl, (request, response) => {
+    app.listen(port);
 
-    const parsedUrl = url.parse(request.url);
-    const pathName = "/" + parsedUrl.pathname.split("/")[1] || "/";
-    const func = router[pathName] || router.default;
-
-    logger(request, response, () => func(request, response));
-  });
-  server.listen(port);
+    console.log('Server was started at http://localhost:' + port);
 };
 
 module.exports = startServer;
