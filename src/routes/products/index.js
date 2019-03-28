@@ -41,11 +41,11 @@ const productsRoute = (req, res) => {
                     resData = getProductsByCategory(queryArr, parsedData);
                 }
             }
-            if (pathCategory === 'products' && !pathID) {
+            if (pathCategory === 'products' && !pathID && !req.query) {
                 resData = parsedData;
             }
 
-            if (!resData.length) {
+            if (!resData || !resData.length) {
                 status = 'no products';
             }
 

@@ -19,7 +19,7 @@ const checkUser = (req, resp, next) => {
 };
 
 const checkOrder = (req, resp, next) => {
-    if (req.body.order) {
+    if (req.body.products.length) {
         next();
         return;
     }
@@ -35,6 +35,6 @@ router
     .get('/products/', productsRoute)
     .get('/users/:id', getUser)
     .post('/users', checkUser, createUser)
-    .post('/orders/', checkOrder, createOrder);
+    .post('/orders', checkOrder, createOrder);
 
 module.exports = router;

@@ -2,17 +2,37 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const ordersFolder = path.resolve(__dirname, '../../../', 'db/orders');
-
+const productsPath = path.join(__dirname, '../../db/', 'products', 'all-products.json');
 const writeFile = util.promisify(fs.writeFile);
 
-const saveNewOrder = (data) => {
-    const src = path.resolve('./src/db/users', 'orders.json');
-    const dataStr = JSON.stringify(data);
-    let dir = './src/db/orders/';
-    !fs.existsSync(dir) && fs.mkdirSync(dir);
+const saveNewOrder = (order) => {
 
-    return writeFile(src, dataStr);
+    // find products by ids in all-products.json
+    let result = [],
+        src,
+        dataStr,
+        allProducts = fs.readFileSync(productsPath);
+    const parseProducts = JSON.parse(allProducts);
+
+    order.products.map(id => {
+        parseProducts.filter(products =>
+            products.id.toString() === id &&
+            result.push(products)
+        );
+    });
+
+    // create folder
+    if (result) {
+        let dir = './src/db/orders/';
+        !fs.existsSync(dir) && fs.mkdirSync(dir);
+    }
+
+    // write order to orders.json
+    src = path.resolve('./src/db/orders', 'orders.json');
+    dataStr = JSON.stringify(result);
+    if (result.length) {
+        return writeFile(src, dataStr)
+    } else return Promise.reject('not found');
 };
 
 const createOrder = (request, response) => {
@@ -22,14 +42,15 @@ const createOrder = (request, response) => {
     const sendResponse = () => {
         response.json({
             status: 'success',
-            user: orderData
+            order: orderData
         });
     };
 
     const sendError = () => {
         response.status(400);
         response.json({
-            error: 'user was not saved'
+            status: 'failed',
+            order: null
         });
     };
 
